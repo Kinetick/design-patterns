@@ -1,4 +1,8 @@
-from .pattern import AbstractTechnicalStation, BaseEngine, BaseMechanic
+from .pattern import (
+    AbstractTechnicalStation,
+    BaseEngine,
+    BaseMechanic,
+)
 
 
 class DieselEngine(BaseEngine):
@@ -16,21 +20,21 @@ class TurboEngine(BaseEngine):
 class DieselMechanic(BaseMechanic):
     """Чинила дизельных двигателей."""
 
-    def __init__(self, name: str, service_type: str = 'Дизель') -> None:
+    def __init__(self, name: str, service_type: str = "Дизель") -> None:
         super().__init__(name, service_type)
 
 
 class GasolineMechanic(BaseMechanic):
     """Чинила бензиновых двигателей."""
 
-    def __init__(self, name: str, service_type: str = 'Бензин') -> None:
+    def __init__(self, name: str, service_type: str = "Бензин") -> None:
         super().__init__(name, service_type)
 
 
 class TurboMechanic(BaseMechanic):
     """Чинила турбо двигателей."""
 
-    def __init__(self, name: str, service_type: str = 'Турбо') -> None:
+    def __init__(self, name: str, service_type: str = "Турбо") -> None:
         super().__init__(name, service_type)
 
 
@@ -43,10 +47,10 @@ class TechnicalStation1(AbstractTechnicalStation):
 
         mechanic = None
         if isinstance(engine, DieselEngine):
-            mechanic = DieselMechanic(name='Коля')
+            mechanic = DieselMechanic(name="Коля")
         elif isinstance(engine, GasolineEngine):
-            mechanic = GasolineMechanic(name='Толя')
+            mechanic = GasolineMechanic(name="Толя")
         elif isinstance(engine, TurboEngine):
-            mechanic = TurboMechanic(name='Оля')
+            mechanic = TurboMechanic(name="Оля")
 
         return mechanic

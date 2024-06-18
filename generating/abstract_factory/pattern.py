@@ -58,7 +58,7 @@ class YamahaVehicleFactory(AbstractVehicleFactory):
     def create_car(cls) -> BaseCar:
         """Фабричный метод создания автомобиля Yamaha."""
         vehicle = BaseCar(
-            producer_name='Yamaha', doors_count=4, horse_powers=120
+            producer_name="Yamaha", doors_count=4, horse_powers=120
         )
 
         return vehicle
@@ -66,9 +66,7 @@ class YamahaVehicleFactory(AbstractVehicleFactory):
     @classmethod
     def create_motorcycle(cls) -> BaseMotorCycle:
         """Фабричный метод создания мотоцикла Yamaha."""
-        vehicle = BaseMotorCycle(
-            producer_name='Yamaha', horse_powers=200
-        )
+        vehicle = BaseMotorCycle(producer_name="Yamaha", horse_powers=200)
 
         return vehicle
 
@@ -80,7 +78,7 @@ class HondaVehicleFactory(AbstractVehicleFactory):
     def create_car(cls) -> BaseCar:
         """Фабричный метод создания автомобиля Honda."""
         vehicle = BaseCar(
-            producer_name='Honda', doors_count=2, horse_powers=140
+            producer_name="Honda", doors_count=2, horse_powers=140
         )
 
         return vehicle
@@ -88,8 +86,6 @@ class HondaVehicleFactory(AbstractVehicleFactory):
     @classmethod
     def create_motorcycle(cls) -> BaseMotorCycle:
         """Фабричный метод создания мотоцикла Honda."""
-        vehicle = BaseMotorCycle(
-            producer_name='Honda', horse_powers=225
-        )
+        vehicle = BaseMotorCycle(producer_name="Honda", horse_powers=225)
 
         return vehicle

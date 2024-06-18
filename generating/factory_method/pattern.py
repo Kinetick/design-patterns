@@ -49,7 +49,6 @@ class AbstractTechnicalStation(ABC):
         mechanic.service_engine(engine=engine)
 
     @abstractmethod
-    @classmethod
     def call_mechanic(cls, engine: BaseEngine) -> BaseMechanic:
         """Абстрактный фабричный метод - вызова специалиста."""
         ...

@@ -1,5 +1,3 @@
-
-
 from abc import ABC, abstractmethod
 
 
@@ -67,27 +65,23 @@ class BaseCar:
 
     def drive(self) -> None:
         """Интерфейс управления автомобилем."""
-        print(self, 'Погнали - ВРУУУУУМММ!', sep='\n')
+        print(self, "Погнали - ВРУУУУУМММ!", sep="\n")
 
 
 class AbstractCarBuilder(ABC):
     """Абстрактный строитель автомобиля."""
 
     @abstractmethod
-    def build_wheels(cls) -> BaseWheels:
-        ...
+    def build_wheels(cls) -> BaseWheels: ...
 
     @abstractmethod
-    def build_engine(cls) -> BaseEngine:
-        ...
+    def build_engine(cls) -> BaseEngine: ...
 
     @abstractmethod
-    def build_body(cls) -> BaseBody:
-        ...
+    def build_body(cls) -> BaseBody: ...
 
     @abstractmethod
-    def create_car(cls) -> BaseCar:
-        ...
+    def create_car(cls) -> BaseCar: ...
 
 
 class DieselCarBuilder(AbstractCarBuilder):
@@ -97,7 +91,7 @@ class DieselCarBuilder(AbstractCarBuilder):
     def build_engine(cls) -> BaseEngine:
         """Фабричный метод дизельного двигателя."""
 
-        return BaseEngine(gas_type='Diesel')
+        return BaseEngine(gas_type="Diesel")
 
     @classmethod
     def build_wheels(cls) -> BaseWheels:
@@ -109,7 +103,7 @@ class DieselCarBuilder(AbstractCarBuilder):
     def build_body(cls) -> BaseBody:
         """Фабричный метод кузова дизельного двигателя."""
 
-        return BaseBody(body_type='Jeep')
+        return BaseBody(body_type="Jeep")
 
     def create_car(self) -> BaseCar:
         """Фабричный метод создания дизельного автомобиля."""
@@ -117,5 +111,5 @@ class DieselCarBuilder(AbstractCarBuilder):
         return BaseCar(
             body=self.build_body(),
             engine=self.build_engine(),
-            wheels=self.build_wheels()
+            wheels=self.build_wheels(),
         )
