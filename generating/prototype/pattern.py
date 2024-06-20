@@ -112,7 +112,7 @@ class RegisterEnginePrototype:
     @classmethod
     def unregister_engine(cls, name_engine: str) -> BaseEngine | None:
         """Интерфейс исключения двигателя из регистра."""
-        engine = cls._REGISTERED_ENGINES.get(name_engine)
+        engine = cls._REGISTERED_ENGINES.pop(name_engine, None)
 
         return engine
 
