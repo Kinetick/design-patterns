@@ -7,25 +7,25 @@ from .pattern import (
 
 
 @singleton
-class DecoratorSingletonExample:
+class DecoratorSingleton:
     """Класс для примера реализации через декоратор класса."""
 
     ...
 
 
-class NewMethodSingletonExample(NewMethodSingleton):
+class NewSingleton(NewMethodSingleton):
     """Класс для примера реализации через перегрузку __new__."""
 
     ...
 
 
-class MetaClassSingletonExample(metaclass=MetaClassSingleton):
+class MetaSingleton(metaclass=MetaClassSingleton):
     """Класс для примера реализации через метакласс."""
 
     ...
 
 
-class ThreadSafeSingletonExample(metaclass=ThreadSafeSingleton):
+class ThreadSingleton(metaclass=ThreadSafeSingleton):
     """Класс для примера реализации thread safe через метакласс."""
 
     ...

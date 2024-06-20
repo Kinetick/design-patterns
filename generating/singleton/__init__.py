@@ -15,15 +15,15 @@ example.py
 """
 
 from .example import (
-    DecoratorSingletonExample,
-    MetaClassSingletonExample,
-    NewMethodSingletonExample,
-    ThreadSafeSingletonExample,
+    DecoratorSingleton,
+    MetaSingleton,
+    NewSingleton,
+    ThreadSingleton,
 )
 
 __all__ = [
-    "DecoratorSingletonExample",
-    "MetaClassSingletonExample",
-    "NewMethodSingletonExample",
-    "ThreadSafeSingletonExample",
+    "DecoratorSingleton",
+    "MetaSingleton",
+    "NewSingleton",
+    "ThreadSingleton",
 ]
