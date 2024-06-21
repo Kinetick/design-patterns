@@ -10,7 +10,6 @@ class InjectionProcessor(AbstractGasolineObserver):
     def __init__(
         self, injection_mode: str = "default", economy_floor: float = 0.35
     ) -> None:
-        super().__init__()
         self._injection_mode = injection_mode
         self._economy_floor = economy_floor
 
@@ -38,7 +37,6 @@ class MicroclimateProcessor(AbstractGasolineObserver):
     def __init__(
         self, microclimate_mode: str = "on", economy_floor: float = 0.50
     ) -> None:
-        super().__init__()
         self._microclimate_mode = microclimate_mode
         self._economy_floor = economy_floor
 
@@ -66,7 +64,6 @@ class GasolineDisplay(AbstractGasolineObserver):
     def __init__(
         self, alert_mode: bool = False, alert_floor: float = 0.2
     ) -> None:
-        super().__init__()
         self._alert_mode = alert_mode
         self._alert_floor = alert_floor
         self._gasoline_level = None
@@ -98,7 +95,6 @@ class GasolineLevelSensor(AbstractGasolineObservable):
         observers: dict[str, AbstractGasolineObserver] | None = None,
         gasoline_level: float | None = None,
     ) -> None:
-        super().__init__()
         self._observes = observers or {}
         self._gasoline_level = gasoline_level
 
