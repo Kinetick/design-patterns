@@ -7,7 +7,7 @@ class AbstractGear(ABC):
     @abstractmethod
     def change_movement(self) -> str:
         """Интерфейс смены состояния движения автомобиля."""
-        raise NotImplementedError
+        ...
 
     def __str__(self) -> str:
         return self.__class__.__name__

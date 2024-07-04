@@ -7,7 +7,7 @@ class AbstractGasolineObserver(ABC):
     @abstractmethod
     def update(self, gasoline_percent: float) -> None:
         """Интерфейс обновления состояния наблюдателя."""
-        raise NotImplementedError
+        ...
 
 
 class AbstractGasolineObservable(ABC):
@@ -16,21 +16,21 @@ class AbstractGasolineObservable(ABC):
     @abstractmethod
     def register_observer(self, observer: AbstractGasolineObserver) -> None:
         """Интерфейс регистрации наблюдателя за уровнем топлива."""
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def unregister_observer(
         self, observer: AbstractGasolineObserver | str
     ) -> AbstractGasolineObserver | None:
         """Интерфейс исключения наблюдателя."""
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def receive_gasoline_level(self, gasoline_level: float) -> None:
         """Интерфейс получения уровня топлива."""
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def notify_observers(self) -> None:
         """Интерфейс оповещения наблюдателей об изменения состояния."""
-        raise NotImplementedError
+        ...
