@@ -1,20 +1,44 @@
 from .pattern import (
+    AbstractEngine,
     AbstractTechnicalStation,
-    BaseEngine,
     BaseMechanic,
 )
 
 
-class DieselEngine(BaseEngine):
+class DieselEngine(AbstractEngine):
     """Дизельный двигатель."""
 
+    def start_diagnostic(self) -> bool:
+        print("Запуск диагностики дизельного двигателя.")
 
-class GasolineEngine(BaseEngine):
+        return self.is_broken
+
+    def start_engine(self) -> None:
+        print("Запуск дизельного двигателя.")
+
+
+class GasolineEngine(AbstractEngine):
     """Бензиновый двигатель."""
 
+    def start_diagnostic(self) -> bool:
+        print("Запуск диагностики бензинового двигателя.")
 
-class TurboEngine(BaseEngine):
+        return self.is_broken
+
+    def start_engine(self) -> None:
+        print("Запуск бензинового двигателя.")
+
+
+class TurboEngine(AbstractEngine):
     """Турбированный двигатель."""
+
+    def start_diagnostic(self) -> bool:
+        print("Запуск диагностики турбинного двигателя.")
+
+        return self.is_broken
+
+    def start_engine(self) -> None:
+        print("Запуск турбинного двигателя.")
 
 
 class DieselMechanic(BaseMechanic):
@@ -42,7 +66,7 @@ class TechnicalStation1(AbstractTechnicalStation):
     """Техническая станция №1."""
 
     @classmethod
-    def call_mechanic(cls, engine: BaseEngine) -> BaseMechanic | None:
+    def call_mechanic(cls, engine: AbstractEngine) -> BaseMechanic | None:
         """Фабричный метод вызова механика на станции №1."""
 
         mechanic = None

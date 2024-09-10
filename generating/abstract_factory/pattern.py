@@ -42,50 +42,10 @@ class AbstractVehicleFactory(ABC):
 
     @abstractmethod
     def create_car(cls) -> BaseCar:
-        """Абстрактный, фабричный метод создания автомобиля."""
+        """Интерфейс создания автомобиля."""
         ...
 
     @abstractmethod
     def create_motorcycle(cls) -> BaseMotorCycle:
-        """Абстрактный, фабричный метод создания мотоцикла."""
+        """Интерфейс создания мотоцикла."""
         ...
-
-
-class YamahaVehicleFactory(AbstractVehicleFactory):
-    """Фабрика производства транспорта Yamaha."""
-
-    @classmethod
-    def create_car(cls) -> BaseCar:
-        """Фабричный метод создания автомобиля Yamaha."""
-        vehicle = BaseCar(
-            producer_name="Yamaha", doors_count=4, horse_powers=120
-        )
-
-        return vehicle
-
-    @classmethod
-    def create_motorcycle(cls) -> BaseMotorCycle:
-        """Фабричный метод создания мотоцикла Yamaha."""
-        vehicle = BaseMotorCycle(producer_name="Yamaha", horse_powers=200)
-
-        return vehicle
-
-
-class HondaVehicleFactory(AbstractVehicleFactory):
-    """Фабрика производства транспорта Honda."""
-
-    @classmethod
-    def create_car(cls) -> BaseCar:
-        """Фабричный метод создания автомобиля Honda."""
-        vehicle = BaseCar(
-            producer_name="Honda", doors_count=2, horse_powers=140
-        )
-
-        return vehicle
-
-    @classmethod
-    def create_motorcycle(cls) -> BaseMotorCycle:
-        """Фабричный метод создания мотоцикла Honda."""
-        vehicle = BaseMotorCycle(producer_name="Honda", horse_powers=225)
-
-        return vehicle

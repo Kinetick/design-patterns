@@ -23,7 +23,7 @@ class MetaClassSingleton(type):
     def __call__(cls, *args: Any, **kwargs: Any) -> Any:
         instance = cls._INSTANCES.get(cls)
         if instance is None:
-            instance = super(MetaClassSingleton, cls).__call__(*args, **kwargs)
+            instance = super().__call__(*args, **kwargs)
             cls._INSTANCES[cls] = instance
 
         return instance
@@ -65,10 +65,12 @@ class ThreadSafeSingleton(type):
     @with_lock(lock=lock)
     def _locked_call(cls, *args, **kwargs) -> Any:
         if cls not in cls._INSTANCES:
-            inst = super(ThreadSafeSingleton, cls).__call__(*args, **kwargs)
-            cls._INSTANCES[cls] = inst
+            instance = super(ThreadSafeSingleton, cls).__call__(
+                *args, **kwargs
+            )
+            cls._INSTANCES[cls] = instance
 
-        return inst
+        return instance
 
 
 def singleton(cls):

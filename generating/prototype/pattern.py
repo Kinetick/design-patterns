@@ -9,12 +9,10 @@ class InheritanceEnginePrototype:
 
     def clone(self, is_shallow: bool = False) -> "InheritanceEnginePrototype":
         """Интерфейс копирования объекта самим себя."""
-        copied_engine = copy(self) if is_shallow else deepcopy(self)
 
-        return copied_engine
+        return copy(self) if is_shallow else deepcopy(self)
 
     def __str__(self) -> str:
-        """Общая информация о двигателе."""
         description = f"""
             Тип двигателя: {self.__class__.__name__}
             Общее кол-во цилиндров: {self.cylinders}
@@ -112,9 +110,8 @@ class RegisterEnginePrototype:
     @classmethod
     def unregister_engine(cls, name_engine: str) -> BaseEngine | None:
         """Интерфейс исключения двигателя из регистра."""
-        engine = cls._REGISTERED_ENGINES.pop(name_engine, None)
 
-        return engine
+        return cls._REGISTERED_ENGINES.pop(name_engine, None)
 
     @classmethod
     def clone(
@@ -122,6 +119,5 @@ class RegisterEnginePrototype:
     ) -> BaseEngine | None:
         """Интерфейс клонирования объекта двигателя."""
         engine = cls._REGISTERED_ENGINES.get(name_engine)
-        result = copy(engine) if is_shallow else deepcopy(engine)
 
-        return result
+        return copy(engine) if is_shallow else deepcopy(engine)

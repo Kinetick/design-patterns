@@ -1,21 +1,30 @@
 from abc import ABC, abstractmethod
+from random import randint
 
 
-class BaseEngine:
-    """Базовый класс - двигателя."""
+class AbstractEngine(ABC):
+    """Абстрактный класс двигателя."""
 
     def __init__(self, is_broken: bool) -> None:
         self._is_broken = is_broken
 
+    @property
+    def is_broken(self) -> bool:
+        """Св-во состояния двигателя."""
+        return self._is_broken
+
+    @is_broken.setter
+    def is_broken(self, new_engine_state: bool) -> None:
+        self._is_broken = new_engine_state
+
+    @abstractmethod
     def start_engine(self) -> None:
-        """Запуск дизельного двигателя."""
-        print(self.start_engine.__doc__)
+        """Интерфейс запуска двигателя."""
+        ...
 
     def start_diagnostic(self) -> bool:
-        """Запуск диагностики дизельного двигателя."""
-        print(self.start_diagnostic.__doc__)
-
-        return self._is_broken
+        """Интерфейс запуска диагностики двигателя."""
+        ...
 
 
 class BaseMechanic:
@@ -25,30 +34,32 @@ class BaseMechanic:
         self._name = name
         self._service_type = service_type
 
-    @abstractmethod
-    def service_engine(self, engine: BaseEngine) -> None:
+    def service_engine(self, engine: AbstractEngine) -> None:
         """Метод реализующий логику обслуживания двигателя."""
-        service_message = f"""
-            Имя специалиста: {self._name}
-            Тип обслуживаемого двигателя: {self._service_type}
-            Класс обслуживаемого двигателя: {engine.__class__.__name__}
-        """
-        print(service_message)
-        is_broken = engine.start_diagnostic()
-        if is_broken:
-            engine._is_broken = False
+        print(
+            f"""
+                Имя специалиста: {self._name}
+                Тип обслуживаемого двигателя: {self._service_type}
+                Класс обслуживаемого двигателя: {engine.__class__.__name__}
+            """
+        )
+
+        while not engine.start_diagnostic():
+            print("Двигатель не исправен, начинаю ремонт.")
+            engine.is_broken = bool(randint(0, 1))
+
         engine.start_engine()
 
 
 class AbstractTechnicalStation(ABC):
     """Абстрактная техническая станция."""
 
-    def process_order(self, engine: BaseEngine) -> None:
+    def process_order(self, engine: AbstractEngine) -> None:
         """Логика обработки заказа на обслуживание двигателя."""
         mechanic = self.call_mechanic(engine=engine)
         mechanic.service_engine(engine=engine)
 
     @abstractmethod
-    def call_mechanic(cls, engine: BaseEngine) -> BaseMechanic:
+    def call_mechanic(cls, engine: AbstractEngine) -> BaseMechanic:
         """Абстрактный фабричный метод - вызова специалиста."""
         ...

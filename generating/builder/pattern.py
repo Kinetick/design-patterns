@@ -72,44 +72,23 @@ class AbstractCarBuilder(ABC):
     """Абстрактный строитель автомобиля."""
 
     @abstractmethod
-    def build_wheels(cls) -> BaseWheels: ...
-
-    @abstractmethod
-    def build_engine(cls) -> BaseEngine: ...
-
-    @abstractmethod
-    def build_body(cls) -> BaseBody: ...
-
-    @abstractmethod
-    def create_car(cls) -> BaseCar: ...
-
-
-class DieselCarBuilder(AbstractCarBuilder):
-    """Строитель дизельного автомобиля"""
-
-    @classmethod
-    def build_engine(cls) -> BaseEngine:
-        """Фабричный метод дизельного двигателя."""
-
-        return BaseEngine(gas_type="Diesel")
-
-    @classmethod
     def build_wheels(cls) -> BaseWheels:
-        """Фабричный метод колес дизельного автомобиля."""
+        """Интерфейс создания колес автомобиля."""
+        ...
 
-        return BaseWheels(diameter=22)
+    @abstractmethod
+    def build_engine(cls) -> BaseEngine:
+        """Интерфейс создания двигателя автомобиля."""
+        ...
 
-    @classmethod
+    @abstractmethod
     def build_body(cls) -> BaseBody:
-        """Фабричный метод кузова дизельного двигателя."""
+        """Интерфейс создания кузова автомобиля."""
+        ...
 
-        return BaseBody(body_type="Jeep")
-
-    def create_car(self) -> BaseCar:
-        """Фабричный метод создания дизельного автомобиля."""
-
-        return BaseCar(
-            body=self.build_body(),
-            engine=self.build_engine(),
-            wheels=self.build_wheels(),
-        )
+    # * По сути, интерфейс ниже может использовать "Шаблонный метод", т.к.
+    # * логика создания автомобиля всегда одна.
+    @abstractmethod
+    def create_car(cls) -> BaseCar:
+        """Интерфейс создания автомобиля."""
+        ...
