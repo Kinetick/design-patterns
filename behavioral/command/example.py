@@ -1,4 +1,8 @@
-from .pattern import AbstractCommand, AbstractInvoker
+from .pattern import (
+    AbstractInvoker,
+    BaseCommand,
+    BaseManager,
+)
 
 
 class StopInterpret(Exception):
@@ -23,153 +27,70 @@ class StopInterpret(Exception):
         return description
 
 
-class BaseManager:
-    """Базовый класс объекта управления."""
-
-    def __init__(self) -> None:
-        self._state = None
-
-    def __str__(self) -> str:
-        """Текущее состояние устройства."""
-        description = f"""
-            Тип сервиса: {self.__class__.__name__}
-            Сервис включен: {self._state}
-        """
-
-        return description
-
-
 class MicroclimateManager(BaseManager):
     """Объект управления микроклиматом."""
-
-    def on_microclimate(self) -> None:
-        """Интерфейс включения системы микроклимата."""
-        self._state = True
-        print(self)
-
-    def off_microclimate(self) -> None:
-        """Интерфейс отключения системы микроклимата."""
-        self._state = False
-        print(self)
 
 
 class LightingManager(BaseManager):
     """Объект управления светом."""
 
-    def on_lighting(self) -> None:
-        """Интерфейс включения света."""
-        self._state = True
-        print(self)
-
-    def off_lighting(self) -> None:
-        """Интерфейс выключения света."""
-        self._state = False
-        print(self)
-
 
 class WindowCleanerManager(BaseManager):
     """Объект управления очистителем стекол."""
 
-    def on_cleaner(self) -> None:
-        """Интерфейс включения очистителя стекол."""
-        self._state = True
-        print(self)
 
-    def off_cleaner(self) -> None:
-        """Интерфейс отключения очистителя стекол."""
-        self._state = False
-        print(self)
-
-
-class MicroclimateManagementCommand(AbstractCommand):
+class MicroclimateManagementCommand(BaseCommand):
     """Команда управления микроклиматом."""
 
-    def __init__(self, receiver: MicroclimateManager) -> None:
-        self._receiver = receiver
-        self._is_buffered = True
-        self._name = "microclimate"
-
-    @property
-    def is_buffered(self) -> bool:
-        return self._is_buffered
-
-    @property
-    def name(self) -> str:
-        return self._name
-
     def execute(self) -> None:
-        self._receiver.on_microclimate()
+        if self._receiver:
+            turn_on = not self._receiver.state
+            self._receiver.on_state if turn_on else self._receiver.off_state()
 
     def cancel(self) -> None:
-        self._receiver.off_microclimate()
+        if self._receiver:
+            self._receiver.off_state()
 
 
-class LightingManagementCommand(AbstractCommand):
+class LightingManagementCommand(BaseCommand):
     """Команда управления светом."""
 
-    def __init__(self, receiver: LightingManager) -> None:
-        self._receiver = receiver
-        self._buffered = True
-        self._name = "lighter"
-
-    @property
-    def is_buffered(self) -> bool:
-        return self._buffered
-
-    @property
-    def name(self) -> str:
-        return self._name
-
     def execute(self) -> None:
-        self._receiver.on_lighting()
+        if self._receiver:
+            turn_on = not self._receiver.state
+            self._receiver.on_state if turn_on else self._receiver.off_state()
 
     def cancel(self) -> None:
-        self._receiver.off_lighting()
+        if self._receiver:
+            self._receiver.off_state()
 
 
-class WindowCleanerManagementCommand(AbstractCommand):
+class WindowCleanerManagementCommand(BaseCommand):
     """Команда управления очистителем стекол."""
 
-    def __init__(self, receiver: WindowCleanerManager) -> None:
-        self._receiver = receiver
-        self._is_buffered = True
-        self._name = "cleaner"
-
-    @property
-    def is_buffered(self) -> bool:
-        return self._is_buffered
-
-    @property
-    def name(self) -> str:
-        return self._name
-
     def execute(self) -> None:
-        self._receiver.on_cleaner()
+        if self._receiver:
+            turn_on = not self._receiver.state
+            self._receiver.on_state if turn_on else self._receiver.off_state()
 
     def cancel(self) -> None:
-        self._receiver.off_cleaner()
+        if self._receiver:
+            self._receiver.off_state()
 
 
-class UndoCommand(AbstractCommand):
+class UndoCommand(BaseCommand):
     """Команда отмены буферизованной команды."""
 
-    def __init__(self, buffer: dict[str, AbstractCommand]) -> None:
+    def __init__(
+        self, buffer: dict[str, BaseCommand], *args, **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
         self._buffer = buffer
-        self._is_buffered = False
-        self._name = "undo"
-
-    @property
-    def is_buffered(self) -> bool:
-        return self._is_buffered
-
-    @property
-    def name(self) -> str:
-        return self._name
 
     def execute(self) -> None:
         if not self._buffer:
             print("Нет команд для отмены, буфер пустой.")
-            return None
+
         _, command = self._buffer.popitem()
         command.cancel()
 
@@ -177,26 +98,19 @@ class UndoCommand(AbstractCommand):
         raise NotImplementedError
 
 
-class RedoCommand(AbstractCommand):
+class RedoCommand(BaseCommand):
     """Команда повторения буферизованной команды."""
 
-    def __init__(self, buffer: dict[str, AbstractCommand]) -> None:
+    def __init__(
+        self, buffer: dict[str, BaseCommand], *args, **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
         self._buffer = buffer
-        self._is_buffered = False
-        self._name = "redo"
-
-    @property
-    def is_buffered(self) -> bool:
-        return self._is_buffered
-
-    @property
-    def name(self) -> str:
-        return self._name
 
     def execute(self) -> None:
         if not self._buffer:
             print("Нет команды для повторения, буфер пустой.")
-            return None
+
         command_name, command = self._buffer.popitem()
         self._buffer[command_name] = command
         command.execute()
@@ -205,21 +119,12 @@ class RedoCommand(AbstractCommand):
         raise NotImplementedError
 
 
-class HistoryCommand(AbstractCommand):
+class HistoryCommand(BaseCommand):
     """Команда вывода истории команд."""
 
-    def __init__(self, history: dict[int, str]) -> None:
+    def __init__(self, history: dict[int, str], *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self._history = history
-        self._is_buffered = False
-        self._name = "history"
-
-    @property
-    def is_buffered(self) -> bool:
-        return self._is_buffered
-
-    @property
-    def name(self) -> str:
-        return self._name
 
     def execute(self) -> None:
         for index, command in self._history.items():
@@ -229,20 +134,8 @@ class HistoryCommand(AbstractCommand):
         raise NotImplementedError
 
 
-class ExitCommand(AbstractCommand):
+class ExitCommand(BaseCommand):
     """Команда выхода."""
-
-    def __init__(self) -> None:
-        self._is_buffered = False
-        self._name = "exit"
-
-    @property
-    def is_buffered(self) -> bool:
-        return self._is_buffered
-
-    @property
-    def name(self) -> str:
-        return self._name
 
     def execute(self) -> None:
         raise StopInterpret.create_successful()
@@ -256,21 +149,21 @@ class CommandInterpreter(AbstractInvoker):
 
     def __init__(
         self,
-        buffer: dict[str, AbstractCommand],
+        buffer: dict[str, BaseCommand],
         history: dict[int, str],
-        commands: dict[str, AbstractCommand] | None = None,
+        commands: dict[str, BaseCommand] | None = None,
     ) -> None:
         self._commands = commands or {}
         self._buffer = buffer
         self._history = history
 
-    def set_command(self, command: AbstractCommand) -> None:
+    def set_command(self, command: BaseCommand) -> None:
         self._commands[command.name] = command
 
-    def unset_command(self, command_name: str) -> AbstractCommand | None:
+    def unset_command(self, command_name: str) -> BaseCommand | None:
         return self._commands.pop(command_name, None)
 
-    def input_command(self) -> AbstractCommand | None:
+    def input_command(self) -> BaseCommand | None:
         command_name = input(">> ").casefold()
         command = self._commands.get(command_name)
         if not command:

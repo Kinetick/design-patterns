@@ -1,4 +1,4 @@
-from .pattern import AbstractGear, BaseCar
+from .pattern import BaseCar, BaseGear
 
 
 class WarTrackCar(BaseCar):
@@ -7,35 +7,35 @@ class WarTrackCar(BaseCar):
     ...
 
 
-class FirstGear(AbstractGear):
+class FirstGear(BaseGear):
     """Первая передача."""
 
     def change_movement(self) -> str:
         return "Слегка вперед."
 
 
-class SecondGear(AbstractGear):
+class SecondGear(BaseGear):
     """Вторая передача."""
 
     def change_movement(self) -> str:
         return "Очень вперед."
 
 
-class LastGear(AbstractGear):
+class LastGear(BaseGear):
     """Последняя передача."""
 
     def change_movement(self) -> str:
         return "WAAAAAGH!!!"
 
 
-class NeutralGear(AbstractGear):
+class NeutralGear(BaseGear):
     """Нейтральная передача."""
 
     def change_movement(self) -> str:
         return "Ни вперед, ни назад."
 
 
-class ReverseGear(AbstractGear):
+class ReverseGear(BaseGear):
     """Задняя передача."""
 
     def change_movement(self) -> str:

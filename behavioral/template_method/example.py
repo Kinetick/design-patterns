@@ -1,7 +1,7 @@
-from .pattern import AbstractFileDownloader
+from .pattern import BaseFileDownloader
 
 
-class CloudFileDownloader(AbstractFileDownloader):
+class CloudFileDownloader(BaseFileDownloader):
     """Облачный загрузчик файла."""
 
     def connect_to_storage(self) -> dict[str, str]:
@@ -26,7 +26,7 @@ class CloudFileDownloader(AbstractFileDownloader):
         return file_name, file_data
 
 
-class LocalFileDownloader(AbstractFileDownloader):
+class LocalFileDownloader(BaseFileDownloader):
     """Локальный загрузчик файла."""
 
     def connect_to_storage(self) -> dict[str, str]:

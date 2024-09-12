@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Callable, Type
+from typing import Type
 
 
 class AbstractExpression(ABC):
@@ -11,7 +11,23 @@ class AbstractExpression(ABC):
         ...
 
 
-class NumericExpression(AbstractExpression):
+class AbstractArithmeticPrioritiesRepo(ABC):
+    """Описание интерфейса репозитория приоритетов арифметических операций."""
+
+    def register_level(
+        self, level: dict[str, Type["BaseArithmeticExpression"]]
+    ) -> None:
+        """Интерфейс добавления уровня приоритетов в репозиторий."""
+        ...
+
+    def get_level(
+        self, index: int
+    ) -> dict[str, Type["BaseArithmeticExpression"]]:
+        """Интерфейс получения уровня приоритетов арифметических операций."""
+        ...
+
+
+class BaseNumericExpression(AbstractExpression):
     """Описание интерфейса терминального выражения (числа)."""
 
     def __init__(self, expression: str) -> None:
@@ -21,97 +37,36 @@ class NumericExpression(AbstractExpression):
         return float(self._expression)
 
 
-class ArithmeticExpression(AbstractExpression):
+class BaseArithmeticExpression(AbstractExpression):
     """Описание интерфейса нетерминального выражения (ариф. операция)."""
 
     def __init__(
         self,
-        left_expression: NumericExpression,
-        right_expression: NumericExpression,
+        left_expression: BaseNumericExpression,
+        right_expression: BaseNumericExpression,
     ) -> None:
         self._left_expression = left_expression
         self._right_expression = right_expression
 
 
-class AddExpression(ArithmeticExpression):
-    """Реализация интерпретации выражения сложения."""
-
-    def interpret(self) -> float:
-        return (
-            self._left_expression.interpret()
-            + self._right_expression.interpret()
-        )
-
-
-class SubExpression(ArithmeticExpression):
-    """Реализация интерпретации выражения вычитания."""
-
-    def interpret(self) -> float:
-        return (
-            self._left_expression.interpret()
-            - self._right_expression.interpret()
-        )
-
-
-class DivExpression(ArithmeticExpression):
-    """Реализация интерпретации выражения деления."""
-
-    def interpret(self) -> float:
-        return (
-            self._left_expression.interpret()
-            / self._right_expression.interpret()
-        )
-
-
-class MulExpression(ArithmeticExpression):
-    """Реализация интерпретации выражения умножения."""
-
-    def interpret(self) -> float:
-        return (
-            self._left_expression.interpret()
-            * self._right_expression.interpret()
-        )
-
-
-class AbstractArithmeticPrioritiesRepo(ABC):
-    """Описание интерфейса репозитория приоритетов арифметических операций."""
+class BaseArithmeticPrioritiesRepo(AbstractArithmeticPrioritiesRepo):
+    """Базовый класс репозитория приоритетов операций."""
 
     def __init__(
         self,
     ) -> None:
-        self._map_priorities: dict[
-            int, dict[str, Type[ArithmeticExpression]]
+        self._map_prior: dict[
+            int, dict[str, Type[BaseArithmeticExpression]]
         ] = {}
         self.last_level_index = 0
 
     def register_level(
-        self, level: dict[str, Type[ArithmeticExpression]]
+        self, level: dict[str, Type[BaseArithmeticExpression]]
     ) -> None:
-        """Интерфейс добавления уровня приоритетов в репозиторий."""
-        ...
+        self._map_prior[self.last_level_index] = level
+        self.last_level_index += 1
 
-    def get_level(self, index: int) -> dict[str, Type[ArithmeticExpression]]:
-        """Интерфейс получения уровня приоритетов арифметических операций."""
-        ...
-
-
-class BracketExpression(AbstractExpression):
-    """Реализация интерпретации выражения скобок."""
-
-    def __init__(
-        self,
-        expression: list[str],
-        approximation_method: Callable[
-            [list[str], AbstractArithmeticPrioritiesRepo], list[str]
-        ],
-        arithmetic_priorities_repo: AbstractArithmeticPrioritiesRepo,
-    ):
-        self._expression = expression
-        self._approximation_method = approximation_method
-        self._arithmetic_priorities_repo = arithmetic_priorities_repo
-
-    def interpret(self) -> list[str]:
-        self._expression = self._approximation_method(
-            self._expression, self._arithmetic_priorities_repo
-        )
-        return self._expression
+    def get_level(
+        self, index: int
+    ) -> dict[str, Type[BaseArithmeticExpression]]:
+        return self._map_prior[index]

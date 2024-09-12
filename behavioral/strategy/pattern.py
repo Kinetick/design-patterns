@@ -9,6 +9,10 @@ class AbstractGear(ABC):
         """Интерфейс смены состояния движения автомобиля."""
         ...
 
+
+class BaseGear(AbstractGear):
+    """Базовый класс передачи."""
+
     def __str__(self) -> str:
         return self.__class__.__name__
 

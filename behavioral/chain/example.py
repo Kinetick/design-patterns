@@ -1,12 +1,12 @@
 import re
 
 from .pattern import (
-    AbstractPassValidator,
+    BasePassValidator,
     PasswordValidationError,
 )
 
 
-class PassLengthValidator(AbstractPassValidator):
+class PassLengthValidator(BasePassValidator):
     """Валидатор длины пароля."""
 
     @classmethod
@@ -18,7 +18,7 @@ class PassLengthValidator(AbstractPassValidator):
         return password
 
 
-class PassOnlyAlphabeticalValidator(AbstractPassValidator):
+class PassOnlyAlphabeticalValidator(BasePassValidator):
     """Валидатор наличия только букв в теле пароля."""
 
     @classmethod
@@ -30,7 +30,7 @@ class PassOnlyAlphabeticalValidator(AbstractPassValidator):
         return password
 
 
-class PassOnlyNumericalValidator(AbstractPassValidator):
+class PassOnlyNumericalValidator(BasePassValidator):
     """Валидатор наличия только цифр в теле пароля."""
 
     @classmethod
@@ -42,7 +42,7 @@ class PassOnlyNumericalValidator(AbstractPassValidator):
         return password
 
 
-class PassOnlySpecialValidator(AbstractPassValidator):
+class PassOnlySpecialValidator(BasePassValidator):
     """Валидатор наличия только спецсимволов в теле пароля."""
 
     @classmethod
@@ -58,7 +58,7 @@ class PassOnlySpecialValidator(AbstractPassValidator):
         return password
 
 
-class PassNotAlphabeticalValidator(AbstractPassValidator):
+class PassNotAlphabeticalValidator(BasePassValidator):
     """Валидатор отсутствия букв в теле пароля."""
 
     @classmethod
@@ -72,7 +72,7 @@ class PassNotAlphabeticalValidator(AbstractPassValidator):
         return password
 
 
-class PassNotNumericalValidator(AbstractPassValidator):
+class PassNotNumericalValidator(BasePassValidator):
     """Валидатор отсутствия цифр в теле пароля."""
 
     @classmethod
@@ -86,7 +86,7 @@ class PassNotNumericalValidator(AbstractPassValidator):
         return password
 
 
-class PassNotSpecialValidator(AbstractPassValidator):
+class PassNotSpecialValidator(BasePassValidator):
     """Валидатор отсутствия спецсимволов в теле пароля."""
 
     @classmethod
@@ -100,7 +100,7 @@ class PassNotSpecialValidator(AbstractPassValidator):
         return password
 
 
-class PassCaseValidator(AbstractPassValidator):
+class PassCaseValidator(BasePassValidator):
     """Валидатор регистров тела пароля."""
 
     @classmethod

@@ -1,6 +1,24 @@
 from abc import ABC, abstractmethod
 
 
+class AbstractPassValidator(ABC):
+    """Абстрактный валидатор пароля."""
+
+    def set_next_validator(self, validator: "AbstractPassValidator") -> None:
+        """Интерфейс установки следующего звена валидации."""
+        ...
+
+    @classmethod
+    @abstractmethod
+    def _validate(cls, password: str) -> str:
+        """Интерфейс валидации пароля."""
+        ...
+
+    def validate(self, password: str) -> str | None:
+        """Интерфейс инициации валидации пароля."""
+        ...
+
+
 class PasswordValidationError(Exception):
     """Ошибка валидации пароля."""
 
@@ -58,26 +76,16 @@ class PasswordValidationError(Exception):
         return cls(message)
 
 
-class AbstractPassValidator(ABC):
-    """Абстрактный валидатор пароля."""
+class BasePassValidator(AbstractPassValidator):
+    """Базовый валидатор пароля."""
 
-    def __init__(
-        self, validator: "AbstractPassValidator | None" = None
-    ) -> None:
+    def __init__(self, validator: "BasePassValidator | None" = None) -> None:
         self._next_validator = validator
 
-    def set_next_validator(self, validator: "AbstractPassValidator") -> None:
-        """Интерфейс установки следующего звена валидации."""
+    def set_next_validator(self, validator: "BasePassValidator") -> None:
         self._next_validator = validator
-
-    @classmethod
-    @abstractmethod
-    def _validate(cls, password: str) -> str:
-        """Инкапсуляция внутренней логики валидации."""
-        ...
 
     def validate(self, password: str) -> str | None:
-        """Интерфейс инициации валидации пароля."""
         validated_password = None
         try:
             validated_password = self._validate(password)

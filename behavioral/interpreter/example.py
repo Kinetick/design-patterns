@@ -1,36 +1,85 @@
-from typing import Type
+from typing import Callable
 
 from behavioral.interpreter.pattern import (
-    ArithmeticExpression,
+    BaseArithmeticExpression,
 )
 
 from .pattern import (
-    AbstractArithmeticPrioritiesRepo,
-    AddExpression,
-    BracketExpression,
-    DivExpression,
-    MulExpression,
-    NumericExpression,
-    SubExpression,
+    AbstractExpression,
+    BaseArithmeticPrioritiesRepo,
+    BaseNumericExpression,
 )
 
 
-class ArithmeticPrioritiesRepo(AbstractArithmeticPrioritiesRepo):
+class BracketExpression(AbstractExpression):
+    """Реализация интерпретации выражения скобок."""
+
+    def __init__(
+        self,
+        expression: list[str],
+        approximation_method: Callable[
+            [list[str], BaseArithmeticPrioritiesRepo], list[str]
+        ],
+        arithmetic_priorities_repo: BaseArithmeticPrioritiesRepo,
+    ):
+        self._expression = expression
+        self._approximation_method = approximation_method
+        self._arithmetic_priorities_repo = arithmetic_priorities_repo
+
+    def interpret(self) -> list[str]:
+        self._expression = self._approximation_method(
+            self._expression, self._arithmetic_priorities_repo
+        )
+        return self._expression
+
+
+class AddExpression(BaseArithmeticExpression):
+    """Реализация интерпретации выражения сложения."""
+
+    def interpret(self) -> float:
+        return (
+            self._left_expression.interpret()
+            + self._right_expression.interpret()
+        )
+
+
+class SubExpression(BaseArithmeticExpression):
+    """Реализация интерпретации выражения вычитания."""
+
+    def interpret(self) -> float:
+        return (
+            self._left_expression.interpret()
+            - self._right_expression.interpret()
+        )
+
+
+class DivExpression(BaseArithmeticExpression):
+    """Реализация интерпретации выражения деления."""
+
+    def interpret(self) -> float:
+        return (
+            self._left_expression.interpret()
+            / self._right_expression.interpret()
+        )
+
+
+class MulExpression(BaseArithmeticExpression):
+    """Реализация интерпретации выражения умножения."""
+
+    def interpret(self) -> float:
+        return (
+            self._left_expression.interpret()
+            * self._right_expression.interpret()
+        )
+
+
+class ArithmeticPrioritiesRepo(BaseArithmeticPrioritiesRepo):
     """Реализация репозитория приоритета арифметических операций."""
-
-    def register_level(
-        self, level: dict[str, Type[ArithmeticExpression]]
-    ) -> None:
-        self._map_priorities[self.last_level_index] = level
-        self.last_level_index += 1
-
-    def get_level(self, index: int) -> dict[str, Type[ArithmeticExpression]]:
-        return self._map_priorities[index]
 
 
 def approximate_method(
     expression: list[str],
-    priorities_repo: AbstractArithmeticPrioritiesRepo,
+    priorities_repo: BaseArithmeticPrioritiesRepo,
 ) -> list[str]:
     """Метод ступенчатой аппроксимации на основе приоритета операций."""
 
@@ -47,10 +96,10 @@ def approximate_method(
             token = expression[token_index]
             if token in priories_level and expression[token_index + 1] != "(":
                 arithmetic_expression = priories_level[token]
-                left_terminal_expression = NumericExpression(
+                left_terminal_expression = BaseNumericExpression(
                     expression[token_index - 1]
                 )
-                right_terminal_expression = NumericExpression(
+                right_terminal_expression = BaseNumericExpression(
                     expression[token_index + 1]
                 )
                 approximal_token = arithmetic_expression(
