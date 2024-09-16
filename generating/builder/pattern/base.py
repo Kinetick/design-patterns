@@ -1,10 +1,14 @@
-from abc import ABC, abstractmethod
+from .abc import (
+    AbstractCar,
+    AbstractCarBuilder,
+    AbstractDriver,
+)
 
 
 class BaseEngine:
     """Базовый класс двигателя."""
 
-    def __init__(self, gas_type: str) -> None:
+    def __init__(self, gas_type: str = "gasoline") -> None:
         self._gas_type = gas_type
 
     def __str__(self) -> str:
@@ -18,7 +22,7 @@ class BaseEngine:
 class BaseWheels:
     """Базовый класс колес."""
 
-    def __init__(self, diameter: int) -> None:
+    def __init__(self, diameter: int = 22) -> None:
         self._diameter = diameter
 
     def __str__(self) -> str:
@@ -32,7 +36,7 @@ class BaseWheels:
 class BaseBody:
     """Базовый класс кузова."""
 
-    def __init__(self, body_type: str) -> None:
+    def __init__(self, body_type: str = "sedan") -> None:
         self._body_type = body_type
 
     def __str__(self) -> str:
@@ -43,7 +47,7 @@ class BaseBody:
         return description
 
 
-class BaseCar:
+class BaseCar(AbstractCar):
     """Базовый класс автомобиля."""
 
     def __init__(
@@ -68,27 +72,43 @@ class BaseCar:
         print(self, "Погнали - ВРУУУУУМММ!", sep="\n")
 
 
-class AbstractCarBuilder(ABC):
-    """Абстрактный строитель автомобиля."""
-
-    @abstractmethod
-    def build_wheels(cls) -> BaseWheels:
-        """Интерфейс создания колес автомобиля."""
-        ...
-
-    @abstractmethod
-    def build_engine(cls) -> BaseEngine:
-        """Интерфейс создания двигателя автомобиля."""
-        ...
-
-    @abstractmethod
+class BaseCarBuilder(AbstractCarBuilder):
+    @classmethod
     def build_body(cls) -> BaseBody:
-        """Интерфейс создания кузова автомобиля."""
-        ...
+        return BaseBody()
 
-    # * По сути, интерфейс ниже может использовать "Шаблонный метод", т.к.
-    # * логика создания автомобиля всегда одна.
-    @abstractmethod
-    def create_car(cls) -> BaseCar:
-        """Интерфейс создания автомобиля."""
-        ...
+    @classmethod
+    def build_engine(cls) -> BaseEngine:
+        return BaseEngine()
+
+    @classmethod
+    def build_wheels(cls) -> BaseWheels:
+        return BaseWheels()
+
+    def create_car(self) -> BaseCar:
+        return BaseCar(
+            body=self.build_body(),
+            wheels=self.build_wheels(),
+            engine=self.build_engine(),
+        )
+
+
+class BaseDriver(AbstractDriver):
+    """Базовый класс водителя."""
+
+    def __init__(self, car_builder: AbstractCarBuilder) -> None:
+        self._car_builder = car_builder
+
+    @property
+    def current_builder(self) -> AbstractCarBuilder:
+        """Текущий строитель автомобиля."""
+        return self._car_builder
+
+    @current_builder.setter
+    def current_builder(self, new_builder: AbstractCarBuilder) -> None:
+        self._car_builder = new_builder
+
+    def steady_ready_go(self, car: AbstractCar | None = None) -> None:
+        if car is None:
+            car = self._car_builder.create_car()
+        car.drive()

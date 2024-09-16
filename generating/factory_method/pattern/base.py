@@ -1,9 +1,14 @@
-from abc import ABC, abstractmethod
 from random import randint
 
+from .abc import (
+    AbstractEngine,
+    AbstractMechanic,
+    AbstractTechnicalStation,
+)
 
-class AbstractEngine(ABC):
-    """Абстрактный класс двигателя."""
+
+class BaseEngine(AbstractEngine):
+    """Базовый класс двигателя."""
 
     def __init__(self, is_broken: bool) -> None:
         self._is_broken = is_broken
@@ -17,25 +22,15 @@ class AbstractEngine(ABC):
     def is_broken(self, new_engine_state: bool) -> None:
         self._is_broken = new_engine_state
 
-    @abstractmethod
-    def start_engine(self) -> None:
-        """Интерфейс запуска двигателя."""
-        ...
 
-    def start_diagnostic(self) -> bool:
-        """Интерфейс запуска диагностики двигателя."""
-        ...
-
-
-class BaseMechanic:
-    """Класс описывающий базового автослесаря."""
+class BaseMechanic(AbstractMechanic):
+    """Базовый класс механика."""
 
     def __init__(self, name: str, service_type: str) -> None:
         self._name = name
         self._service_type = service_type
 
     def service_engine(self, engine: AbstractEngine) -> None:
-        """Метод реализующий логику обслуживания двигателя."""
         print(
             f"""
                 Имя специалиста: {self._name}
@@ -51,15 +46,27 @@ class BaseMechanic:
         engine.start_engine()
 
 
-class AbstractTechnicalStation(ABC):
-    """Абстрактная техническая станция."""
+class BaseTechnicalStation(AbstractTechnicalStation):
+
+    def __init__(
+        self,
+        mechanics_map: dict[AbstractEngine, AbstractMechanic] | None = None,
+    ) -> None:
+        self._mechanics_map = mechanics_map if mechanics_map else {}
 
     def process_order(self, engine: AbstractEngine) -> None:
-        """Логика обработки заказа на обслуживание двигателя."""
         mechanic = self.call_mechanic(engine=engine)
+        if mechanic is None:
+            print(f"Механик для двигателя: {engine} не найден.")
+            return None
+
         mechanic.service_engine(engine=engine)
 
-    @abstractmethod
-    def call_mechanic(cls, engine: AbstractEngine) -> BaseMechanic:
-        """Абстрактный фабричный метод - вызова специалиста."""
-        ...
+    def register_mechanic(
+        self, mechanic: AbstractMechanic, engine: AbstractEngine
+    ) -> None:
+        self._mechanics_map[engine] = mechanic
+
+    def call_mechanic(self, engine: AbstractEngine) -> AbstractMechanic | None:
+
+        return self._mechanics_map.get(engine)

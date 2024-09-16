@@ -3,20 +3,20 @@ from threading import Lock
 from typing import Any, Callable, ParamSpec, TypeVar
 
 
-class NewMethodSingleton:
-    """Реализация паттерна через перегрузку метода __new__."""
+class BaseNewSingleton:
+    """Базовый класс с перегрузкой __new__."""
 
     _INSTANCE = None
 
-    def __new__(cls, *args, **kwargs) -> "NewMethodSingleton":
+    def __new__(cls, *args, **kwargs) -> "BaseNewSingleton":
         if cls._INSTANCE is None:
             cls._INSTANCE = super().__new__(cls, *args, **kwargs)
 
         return cls._INSTANCE
 
 
-class MetaClassSingleton(type):
-    """Реализация паттерна через метакласс."""
+class BaseMetaSingleton(type):
+    """Базовый метакласс одиночки."""
 
     _INSTANCES = {}
 
@@ -50,8 +50,8 @@ def with_lock(
     return decorator
 
 
-class ThreadSafeSingleton(type):
-    """Реализация 'thread safe' одиночки через метакласс."""
+class BaseThreadSafeSingleton(type):
+    """Базовый метакласс потокобезопасного одиночки."""
 
     _INSTANCES = {}
 
@@ -64,11 +64,8 @@ class ThreadSafeSingleton(type):
 
     @with_lock(lock=lock)
     def _locked_call(cls, *args, **kwargs) -> Any:
-        if cls not in cls._INSTANCES:
-            instance = super(ThreadSafeSingleton, cls).__call__(
-                *args, **kwargs
-            )
-            cls._INSTANCES[cls] = instance
+        instance = super().__call__(*args, **kwargs)
+        cls._INSTANCES[cls] = instance
 
         return instance
 

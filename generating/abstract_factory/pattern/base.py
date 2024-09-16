@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from .abc import AbstractDriver, AbstractVehicleFactory
 
 
 class BaseCar:
@@ -37,15 +37,27 @@ class BaseMotorCycle:
         return description
 
 
-class AbstractVehicleFactory(ABC):
-    """Абстрактная фабрика транспорта (машин и т.д.)."""
+class BaseDriver(AbstractDriver):
+    """Базовый класс водителя."""
 
-    @abstractmethod
-    def create_car(cls) -> BaseCar:
-        """Интерфейс создания автомобиля."""
-        ...
+    def __init__(self, vehicle_factory: AbstractVehicleFactory) -> None:
+        self._vehicle_factory = vehicle_factory
 
-    @abstractmethod
-    def create_motorcycle(cls) -> BaseMotorCycle:
-        """Интерфейс создания мотоцикла."""
-        ...
+    @property
+    def current_factory(self) -> AbstractVehicleFactory:
+        """Текущий производитель транспорта."""
+        return self._vehicle_factory
+
+    @current_factory.setter
+    def current_factory(self, new_factory: AbstractVehicleFactory) -> None:
+        self._vehicle_factory = new_factory
+
+    def start_presentation(self) -> None:
+        presentation = f"""
+            Автомобиль:
+                {self._vehicle_factory.create_car()}
+
+            Мотоцикл:
+                {self._vehicle_factory.create_motorcycle()}
+        """
+        print(presentation)

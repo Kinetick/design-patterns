@@ -1,11 +1,11 @@
-from .pattern import (
-    AbstractEngine,
-    AbstractTechnicalStation,
+from pattern.base import (
+    BaseEngine,
     BaseMechanic,
+    BaseTechnicalStation,
 )
 
 
-class DieselEngine(AbstractEngine):
+class DieselEngine(BaseEngine):
     """Дизельный двигатель."""
 
     def start_diagnostic(self) -> bool:
@@ -17,7 +17,7 @@ class DieselEngine(AbstractEngine):
         print("Запуск дизельного двигателя.")
 
 
-class GasolineEngine(AbstractEngine):
+class GasolineEngine(BaseEngine):
     """Бензиновый двигатель."""
 
     def start_diagnostic(self) -> bool:
@@ -29,7 +29,7 @@ class GasolineEngine(AbstractEngine):
         print("Запуск бензинового двигателя.")
 
 
-class TurboEngine(AbstractEngine):
+class TurboEngine(BaseEngine):
     """Турбированный двигатель."""
 
     def start_diagnostic(self) -> bool:
@@ -62,19 +62,13 @@ class TurboMechanic(BaseMechanic):
         super().__init__(name, service_type)
 
 
-class TechnicalStation1(AbstractTechnicalStation):
-    """Техническая станция №1."""
-
-    @classmethod
-    def call_mechanic(cls, engine: AbstractEngine) -> BaseMechanic | None:
-        """Фабричный метод вызова механика на станции №1."""
-
-        mechanic = None
-        if isinstance(engine, DieselEngine):
-            mechanic = DieselMechanic(name="Коля")
-        elif isinstance(engine, GasolineEngine):
-            mechanic = GasolineMechanic(name="Толя")
-        elif isinstance(engine, TurboEngine):
-            mechanic = TurboMechanic(name="Оля")
-
-        return mechanic
+common_technical_station = BaseTechnicalStation()
+common_technical_station.register_mechanic(
+    mechanic=DieselMechanic(name="Коля"), engine=DieselEngine(is_broken=True)
+)
+common_technical_station.register_mechanic(
+    mechanic=TurboMechanic(name="Саша"), engine=DieselEngine(is_broken=True)
+)
+common_technical_station.register_mechanic(
+    mechanic=GasolineMechanic(name="Маша"), engine=DieselEngine(is_broken=True)
+)
