@@ -1,14 +1,14 @@
 """
 Поведенческий паттерн проектирования - команда.
 
-pattern.py
+О паттерне:
     Паттерн позволяет инкапсулировать вызов конкретной команды в отдельный
     объект. Таким образом клиент устанавливающий команду не знает ничего об
     исполнителе команды. Объект команды может параметризоваться и
     протоколироваться. Благодаря инкапсуляции обеспечивается единый интерфейс
     запуска и отмены команды, несмотря на интерфейс получателя команды.
 
-example.py
+Пример:
     В качестве примера можно написать интерпретатор команд для работы с
     несколькими устройствами. В качестве участников паттерна выступают:
         Получатель команды:
@@ -32,31 +32,3 @@ example.py
             - его реализации нет
 
 """
-
-from .example import (
-    CommandInterpreter,
-    ExitCommand,
-    HistoryCommand,
-    LightingManagementCommand,
-    LightingManager,
-    MicroclimateManagementCommand,
-    MicroclimateManager,
-    RedoCommand,
-    UndoCommand,
-    WindowCleanerManagementCommand,
-    WindowCleanerManager,
-)
-
-__all__ = [
-    "CommandInterpreter",
-    "ExitCommand",
-    "LightingManagementCommand",
-    "LightingManager",
-    "MicroclimateManagementCommand",
-    "MicroclimateManager",
-    "RedoCommand",
-    "UndoCommand",
-    "WindowCleanerManagementCommand",
-    "WindowCleanerManager",
-    "HistoryCommand",
-]
