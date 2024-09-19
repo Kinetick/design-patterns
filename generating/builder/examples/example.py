@@ -1,5 +1,5 @@
-from pattern.abc import AbstractCarBuilder
-from pattern.base import (
+from ..pattern.abc import AbstractCarBuilder
+from ..pattern.base import (
     BaseBody,
     BaseCar,
     BaseCarBuilder,

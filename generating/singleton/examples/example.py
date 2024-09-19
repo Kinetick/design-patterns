@@ -1,4 +1,4 @@
-from pattern.base import (
+from ..pattern.base import (
     BaseMetaSingleton,
     BaseNewSingleton,
     BaseThreadSafeSingleton,
