@@ -1,9 +1,6 @@
 import re
 
-from ..pattern.base import (
-    BasePassValidator,
-    PasswordValidationError,
-)
+from ..pattern.base import BasePassValidator, PasswordValidationError
 
 
 class PassLengthValidator(BasePassValidator):
@@ -106,7 +103,6 @@ class PassCaseValidator(BasePassValidator):
         return password
 
 
-# * Здесь прямо напрашивается использование паттерна строитель.
 pass_validator = PassLengthValidator()
 pass_validator.set_next_validator(validator=PassOnlyAlphabeticalValidator())
 pass_validator.set_next_validator(validator=PassOnlyNumericalValidator())

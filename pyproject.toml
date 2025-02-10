@@ -2,7 +2,7 @@
 name = "design-patterns"
 version = "0.1.0"
 description = "Паттерны проектирования на языке Python."
-authors = ["Kinetick"]
+authors = []
 readme = "README.md"
 
 [tool.poetry.dependencies]
